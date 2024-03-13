@@ -13,7 +13,6 @@ export default function Plan({isOpenAlert}) {
   const year_plan = useSelector((state) => state.plan.Yearly_Plan);
 
   const dispatch = useDispatch();
-  console.log(selected_plan)
   const select_Plan = {
     transform: `translate(calc(${
       selectPlan === 1 ? 0 : selectPlan - 1

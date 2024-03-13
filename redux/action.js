@@ -42,3 +42,11 @@ export const selectedAddon = (addOn) => ({
   type: "selected_plan/add_on",
   payload: addOn,
 });
+export const addonsTotal = (total) => ({
+  type: "selected_plan/addons_total",
+  payload: total,
+});
+export const totalPrice = (total) => ({
+  type: "selected_plan/total_price",
+  payload: total,
+});

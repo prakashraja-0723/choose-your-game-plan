@@ -1,12 +1,17 @@
 import React, { useState } from "react";
+import hint from "@/app/images/icon-hint.svg";
+import {addonsTotal, totalPrice} from "@/redux/action";
 
 export default function UseNavForm() {
   const [isNameError, setIsNameError] = useState(null);
   const [isEmailError, setIsEmailError] = useState(null);
   const [isPhoneError, setIsPhoneError] = useState(null);
-  const [isOpenAlert, setIsOpenAlert] = useState(null);
-  
-  
+  const [isOpenAlert, setIsOpenAlert] = useState({
+    img: "",
+    message: "",
+    isShowMessage: null,
+  });
+
   // Regular expressions for email and phone number
   const Email_Regex =
     /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+(?:[A-Z]{2}|com|org|net|gov|mil|biz|info|mobi|name|aero|jobs|museum)\b/;
@@ -67,15 +72,51 @@ export default function UseNavForm() {
     }
   };
 
-  const navPage2 = ({ navPage, selected_plan, dispatch, goNext}) => {
+  const navPage2 = ({ navPage, selected_plan, dispatch, goNext }) => {
     // Navigate form to 2 to 3
     if (selected_plan.plan_type === "") {
-      setIsOpenAlert(true);
-      console.log(isOpenAlert)
+      setIsOpenAlert({
+        img: hint,
+        message: "💡 Please select a plan to proceed",
+        isShowMessage: true,
+      });
+      console.log(isOpenAlert);
     } else {
       dispatch(goNext(navPage));
     }
   };
 
-  return { isPhoneError, isEmailError, isNameError,isOpenAlert,setIsOpenAlert, navPage1, navPage2 };
+  const navPage3 = ({ navPage, selected_plan, dispatch, goNext }) => {
+    if (
+      selected_plan.addOns[0].plan === "" &&
+      selected_plan.addOns[1].plan === "" &&
+      selected_plan.addOns[2].plan === ""
+    ) {
+      setIsOpenAlert({
+        img: hint,
+        message: "💡 Minimum 1 plan is required to proceed",
+        isShowMessage: true,
+      });
+    } else {
+      dispatch(addonsTotal(selected_plan.addOns));
+      dispatch(totalPrice(selected_plan.plan.price));
+      dispatch(goNext(navPage));
+    }
+  };
+  
+  const navPage4 = ({ navPage, dispatch, goNext }) => {
+    dispatch(goNext(navPage));
+  }
+
+  return {
+    isPhoneError,
+    isEmailError,
+    isNameError,
+    isOpenAlert,
+    setIsOpenAlert,
+    navPage1,
+    navPage2,
+    navPage3,
+    navPage4
+  };
 }

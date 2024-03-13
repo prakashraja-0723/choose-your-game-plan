@@ -13,8 +13,9 @@ import {
 import Plan from "@/app/components/plan/Plan";
 import UseNavForm from "@/app/Hooks/useNavForm";
 import AddOns from "@/app/components/add-ons/AddOns";
-import Model from "@/app/components/ui/Model";
-import {Summary} from "@/app/components/summary/Summary";
+import AlertBox from "@/app/components/ui/AlertBox";
+import { Summary } from "@/app/components/summary/Summary";
+import Success from "@/app/components/success/Success";
 
 export default function Page() {
   const navPage = useSelector((state) => state.pageNo);
@@ -32,6 +33,8 @@ export default function Page() {
     setIsOpenAlert,
     navPage1,
     navPage2,
+    navPage3,
+    navPage4
   } = UseNavForm();
   const handleNavFormNext = (navPage) => {
     if (navPage === 1) {
@@ -46,6 +49,10 @@ export default function Page() {
       );
     } else if (navPage === 2) {
       navPage2({ navPage, selected_plan, dispatch, goNext });
+    } else if (navPage === 3){
+      navPage3({ navPage, selected_plan, dispatch, goNext });
+    }else if (navPage === 4){
+      navPage4({ navPage, dispatch, goNext });
     }
   };
   const handleNavFormBack = (navPage) => {
@@ -70,36 +77,41 @@ export default function Page() {
             <Plan isOpenAlert={isOpenAlert} />
           </div>
           <div>
-            <AddOns>JHjkh</AddOns>
+            <AddOns />
           </div>
           <div>
-            <Summary/>
+            <Summary />
+          </div>
+          <div>
+            <Success />
           </div>
         </div>
-        <div
-          className={`lg:absolute lg:bottom-0 lg:right-0 flex items-center justify-between ${
-            navPage === 1 ? "" : "w-full"
-          } `}
-        >
-          {navPage !== 1 && (
-            <button
-              className={`bg-transparent text-coolGray w-[124px] h-12 rounded-lg font-bold `}
-              onClick={() => handleNavFormBack(navPage)}
-            >
-              Go Back {navPage}
-            </button>
-          )}
-          <button
-            className={`bg-marineBlue text-magnolia w-[124px] h-12 rounded-lg font-bold `}
-            onClick={() => handleNavFormNext(navPage)}
+        {navPage !== 5 && (
+          <div
+            className={`lg:absolute lg:bottom-0 lg:right-0 flex items-center justify-between ${
+              navPage === 1 ? "" : "w-full"
+            } `}
           >
-            Next Step {navPage}
-          </button>
-        </div>
+            {navPage !== 1 && (
+              <button
+                className={`bg-transparent text-coolGray w-[124px] h-12 rounded-lg font-bold `}
+                onClick={() => handleNavFormBack(navPage)}
+              >
+                Go Back
+              </button>
+            )}
+            <button
+              className={`bg-marineBlue text-magnolia w-[124px] h-12 rounded-lg font-bold `}
+              onClick={() => handleNavFormNext(navPage)}
+            >
+              Next Step
+            </button>
+          </div>)
+        }
       </main>
-      <Model isOpenAlert={isOpenAlert} setIsOpenAlert={setIsOpenAlert}>
+      <AlertBox isOpenAlert={isOpenAlert} setIsOpenAlert={setIsOpenAlert}>
         Please choose your Add-ons Plan ✅
-      </Model>
+      </AlertBox>
     </>
   );
 }

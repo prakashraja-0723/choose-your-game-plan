@@ -103,29 +103,29 @@ const plans = {
   },
 };
 
-const EmptyAddon = {
-  plan1: {
-    plan: "",
-    description: "",
-    price: 0,
+const EmptyAddon = [
+  {
+    id: 0,
     plan_type: "",
+    plan: "",
+    price: 0,
     checked: false,
   },
-  plan2: {
-    plan: "",
-    description: "",
-    price: 0,
+  {
+    id: 0,
     plan_type: "",
+    plan: "",
+    price: 0,
     checked: false,
   },
-  plan3: {
-    plan: "",
-    description: "",
-    price: 0,
+  {
+    id: 0,
     plan_type: "",
+    plan: "",
+    price: 0,
     checked: false,
   },
-};
+];
 
 const initialState = {
   pageNo: 1,
@@ -143,11 +143,9 @@ const initialState = {
   selected_plan: {
     plan: {},
     plan_type: "",
-    addOn: {
-      plan1: {},
-      plan2: {},
-      plan3: {},
-    },
+    total_price: 0,
+    addons_total: 0,
+    addOns: EmptyAddon,
   },
 };
 
@@ -161,7 +159,7 @@ export const reducer = (state = initialState, action) => {
     case "navForm/go-back":
       return {
         ...state,
-        pageNo: action.payload === 1 ? 1 : state.pageNo - 1,
+        pageNo: action.payload === 1 ? 1 : action.payload === 3 ? 2 : state.pageNo - 1,
       };
     case "user_data/name":
       return {
@@ -230,18 +228,7 @@ export const reducer = (state = initialState, action) => {
         selected_plan: {
           plan: {},
           plan_type: "",
-          //   action.payload === 2
-          //     ? state.add-ons.Monthly_Plan.arcade.id === 0
-          //       ? state.add-ons.Monthly_Plan.arcade
-          //       : state.add-ons.Monthly_Plan.advanced.id === 1
-          //       ? state.add-ons.Monthly_Plan.advanced
-          //       : state.add-ons.Monthly_Plan.pro
-          //     : action.payload === 1
-          //     ? state.add-ons.Yearly_Plan.arcade.id === 0 && state.add-ons.Yearly_Plan.arcade
-          //     : state.add-ons.Yearly_Plan.advanced.id === 1
-          //     ? state.add-ons.Yearly_Plan.advanced
-          //     : state.add-ons.Yearly_Plan.pro,
-          // plan_type: action.payload === 2 ? "Monthly" : "Yearly",
+          addOns: EmptyAddon,
         },
       };
     case "selected_plan/plan_&_plan_type":
@@ -252,6 +239,8 @@ export const reducer = (state = initialState, action) => {
           select_month_plan: action.payload,
         },
         selected_plan: {
+          ...state.selected_plan,
+          addOns: EmptyAddon,
           plan:
             state.plan.select_plan === 1
               ? action.payload === 0
@@ -272,30 +261,75 @@ export const reducer = (state = initialState, action) => {
         ...state,
         selected_plan: {
           ...state.selected_plan,
-          addOn: {
-            ...state.selected_plan.addOn,
-            plan1:
-              action.payload.id !== 1
-                ? { ...state.selected_plan.addOn.plan1 }
-                : action.payload.plan_type === "mo"
-                ? action.payload
-                : state.plan.Yearly_Addons.plan1,
-            plan2:
-              action.payload.id !== 2
-                ? { ...state.selected_plan.addOn.plan1 }
-                : action.payload.plan_type === "mo"
-                ? action.payload
-                : state.plan.Yearly_Addons.plan2,
-            plan3:
-              action.payload.id !== 3
-                ? { ...state.selected_plan.addOn.plan1 }
-                : action.payload.plan_type === "mo"
-                ? action.payload
-                : state.plan.Yearly_Addons.plan3,
-          },
+          addOns: [
+            // ...state.selected_plan.addOns,
+            action.payload.id === 1
+              ? action.payload.id !== state.selected_plan.addOns[0].id
+                ? {
+                    id: action.payload.id,
+                    plan_type: action.payload.plan_type,
+                    plan:
+                      action.payload.plan_type === "mo"
+                        ? action.payload.plan
+                        : state.plan.Yearly_Addons.plan1.plan,
+                    price: action.payload.price,
+                    checked: !action.payload.checked,
+                  }
+                : EmptyAddon[0]
+              : { ...state.selected_plan.addOns[0] },
+            action.payload.id === 2
+              ? action.payload.id !== state.selected_plan.addOns[1].id
+                ? {
+                    id: action.payload.id,
+                    plan_type: action.payload.plan_type,
+                    plan:
+                      action.payload.id === 2 &&
+                      action.payload.plan_type === "mo"
+                        ? action.payload.plan
+                        : state.plan.Yearly_Addons.plan2.plan,
+                    price: action.payload.price,
+                    checked: !action.payload.checked,
+                  }
+                : EmptyAddon[1]
+              : { ...state.selected_plan.addOns[1] },
+            action.payload.id === 3
+              ? action.payload.id !== state.selected_plan.addOns[2].id
+                ? {
+                    id: action.payload.id,
+                    plan_type: action.payload.plan_type,
+                    plan:
+                      action.payload.id === 3 &&
+                      action.payload.plan_type === "mo"
+                        ? action.payload.plan
+                        : state.plan.Yearly_Addons.plan3.plan,
+                    price: action.payload.price,
+                    checked: !action.payload.checked,
+                  }
+                : EmptyAddon[2]
+              : { ...state.selected_plan.addOns[2] },
+          ],
         },
       };
 
+    case "selected_plan/addons_total":
+      return {
+        ...state,
+        selected_plan: {
+          ...state.selected_plan,
+          addons_total: action.payload.reduce((total, plan) => {
+            return total + plan.price;
+          }, 0),
+        },
+      };
+    case "selected_plan/total_price":
+      return {
+        ...state,
+        selected_plan: {
+          ...state.selected_plan,
+          total_price:
+            action.payload + state.selected_plan.addons_total,
+        },
+      };
     default:
       return state;
   }

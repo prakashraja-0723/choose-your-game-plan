@@ -7,7 +7,7 @@ import YearlyAddOn from "@/app/components/ui/YearlyAddOn";
 
 export default function AddOns() {
   const selected_plan = useSelector((state) => state.selected_plan);
-
+  console.log(selected_plan)
   return (
     <div
       className={`w-[450px] h-full lg:relative flex flex-col overflow-hidden`}

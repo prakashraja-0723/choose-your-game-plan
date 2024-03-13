@@ -42,7 +42,7 @@ export default function YearPlan({ year_plan, selectPlan }) {
             {year_plan.arcade.plan_name}
           </p>
           <p className={`text-sm text-coolGray font-medium`}>
-            ${year_plan.arcade.price}/mo
+            ${year_plan.arcade.price}/yr
           </p>
           <p className={`text-xs text-marineBlue`}>{year_plan.arcade.trail}</p>
         </div>
@@ -66,7 +66,7 @@ export default function YearPlan({ year_plan, selectPlan }) {
             {year_plan.advanced.plan_name}
           </p>
           <p className={`text-sm text-coolGray font-medium`}>
-            ${year_plan.advanced.price}/mo
+            ${year_plan.advanced.price}/yr
           </p>
           <p className={`text-xs text-marineBlue`}>
             {year_plan.advanced.trail}
@@ -89,7 +89,7 @@ export default function YearPlan({ year_plan, selectPlan }) {
             {year_plan.pro.plan_name}
           </p>
           <p className={`text-sm text-coolGray font-medium`}>
-            ${year_plan.pro.price}/mo
+            ${year_plan.pro.price}/yr
           </p>
           <p className={`text-xs text-marineBlue`}>{year_plan.pro.trail}</p>
         </div>
